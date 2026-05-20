@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>シンプルじゃんけん</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #f0f4f8; padding: 20px; }
+        .container { background: white; max-width: 500px; margin: auto; padding: 30px; border-radius: 15px; shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .choices { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+        .choice-btn { font-size: 3rem; cursor: pointer; border: 2px solid #ddd; border-radius: 10px; padding: 10px; transition: 0.2s; background: none; }
+        .choice-btn:hover { background: #e0e0e0; transform: scale(1.1); }
+        #result-area { display: none; margin-top: 20px; }
+        .result-text { font-size: 2rem; font-weight: bold; margin: 20px 0; }
+        .reset-btn { padding: 10px 20px; font-size: 1rem; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; }
+        .hands { font-size: 1.5rem; color: #555; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>じゃんけん勝負！</h2>
+
+    <!-- 選択画面 -->
+    <div id="selection-screen">
+        <p>出す手を選んでください</p>
+        <div class="choices">
+            <button class="choice-btn" onclick="playGame('✊')">✊</button>
+            <button class="choice-btn" onclick="playGame('✌️')">✌️</button>
+            <button class="choice-btn" onclick="playGame('✋')">✋</button>
+        </div>
+    </div>
+
+    <!-- 結果画面 -->
+    <div id="result-area">
+        <div class="hands">
+            あなた: <span id="player-hand"></span> vs 
+            相手: <span id="pc-hand"></span>
+        </div>
+        <div id="judgement" class="result-text"></div>
+        <button class="reset-btn" onclick="resetGame()">もう一回！</button>
+    </div>
+</div>
+
+<script>
+    /**
+     * ゲーム実行メインロジック
+     */
+    function playGame(playerHand) {
+        const hands = ['✊', '✌️', '✋'];
+        const pcHand = hands[Math.floor(Math.random() * hands.length)];
+
+        // 勝敗判定
+        let result = "";
+        if (playerHand === pcHand) {
+            result = "引き分け！";
+        } else if (
+            (playerHand === '✊' && pcHand === '✌️') ||
+            (playerHand === '✌️' && pcHand === '✋') ||
+            (playerHand === '✋' && pcHand === '✊')
+        ) {
+            result = "勝ち！";
+        } else {
+            result = "負け…";
+        }
+
+        // 画面表示の切り替え
+        document.getElementById('player-hand').textContent = playerHand;
+        document.getElementById('pc-hand').textContent = pcHand;
+        
+        const judgeElement = document.getElementById('judgement');
+        judgeElement.textContent = result;
+        
+        // 色分けの演出
+        judgeElement.style.color = result === "勝ち！" ? "#d9534f" : (result === "負け…" ? "#0275d8" : "#555");
+
+        document.getElementById('selection-screen').style.display = 'none';
+        document.getElementById('result-area').style.display = 'block';
+    }
+
+    /**
+     * 画面を初期状態に戻す
+     */
+    function resetGame() {
+        document.getElementById('selection-screen').style.display = 'block';
+        document.getElementById('result-area').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
